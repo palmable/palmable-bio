@@ -14,6 +14,10 @@ const EXT: Record<string, string> = {
 
 export type SiteImageKind = "avatar" | "cover" | "post";
 
+function isServerlessHost(): boolean {
+  return process.env.VERCEL === "1" || process.env.NODE_ENV === "production";
+}
+
 function validateImage(slug: string, file: File): string {
   if (!/^[a-z0-9-]+$/.test(slug)) {
     throw new Error("Invalid site.");
@@ -44,8 +48,7 @@ async function saveSiteImageLocally(
 
 /**
  * Persist an uploaded image and return its public URL.
- * Uses Google Drive when GOOGLE_DRIVE_FOLDER_ID is set; otherwise saves to
- * `public/uploads/{slug}/` (local dev only — not persistent on serverless).
+ * Production/serverless requires Google Drive (`GOOGLE_DRIVE_FOLDER_ID`).
  */
 export async function saveSiteImage(
   slug: string,
@@ -56,6 +59,12 @@ export async function saveSiteImage(
 
   if (isDriveConfigured()) {
     return uploadImageToDrive(slug, kind, file, ext);
+  }
+
+  if (isServerlessHost()) {
+    throw new Error(
+      "Image uploads on production require Google Drive. Add GOOGLE_DRIVE_FOLDER_ID to your Vercel env vars (see docs/google-sheets-setup.md §4b)."
+    );
   }
 
   return saveSiteImageLocally(slug, kind, file, ext);

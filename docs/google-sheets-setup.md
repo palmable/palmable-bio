@@ -60,18 +60,21 @@ cp .env.example .env.local
 - `GOOGLE_DRIVE_FOLDER_ID` (optional but recommended) — for image uploads. See
   step 4b below.
 
-## 4b. Image uploads via Google Drive (optional)
+## 4b. Image uploads via Google Drive (required on Vercel)
 
 Profile photos, covers, and post images upload to Google Drive when
-`GOOGLE_DRIVE_FOLDER_ID` is set. Without it, files save to `public/uploads/`
-(local dev only — they disappear on serverless hosts like Vercel).
+`GOOGLE_DRIVE_FOLDER_ID` is set. **Vercel cannot save files to disk** — without
+this variable, uploads fail in production.
 
 1. Enable the **Google Drive API** on the same Cloud project.
-2. In Google Drive, create a folder (e.g. `Palmable uploads`).
-3. **Share** the folder with your service account email → **Editor**.
+2. Create a **Shared drive** (Google Workspace) or a folder inside one — service
+   accounts cannot reliably upload to personal “My Drive” folders (no storage
+   quota). Add your service account email as a **Content manager** or **Contributor**.
+3. Create an `uploads` folder inside the Shared drive (optional).
 4. Copy the folder ID from the URL:
    `https://drive.google.com/drive/folders/`**`<THIS_PART>`**
-5. Set `GOOGLE_DRIVE_FOLDER_ID` in `.env.local`.
+5. Set `GOOGLE_DRIVE_FOLDER_ID` in `.env.local` **and** in Vercel → Settings →
+   Environment Variables, then redeploy.
 
 Uploaded files are made **publicly readable** (anyone with the link) so they
 render on bio pages.

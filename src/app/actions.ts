@@ -23,21 +23,30 @@ export async function logout() {
   await signOut({ redirectTo: "/" });
 }
 
+export type UploadImageResult = { url: string } | { error: string };
+
 export async function uploadSiteImageAction(
   slug: string,
   kind: SiteImageKind,
   formData: FormData
-): Promise<string> {
-  const email = await requireUserEmail();
-  const site = await getOwnedSite(email, slug);
-  if (!site) throw new Error("Site not found.");
+): Promise<UploadImageResult> {
+  try {
+    const email = await requireUserEmail();
+    const site = await getOwnedSite(email, slug);
+    if (!site) return { error: "Site not found." };
 
-  const file = formData.get("file");
-  if (!(file instanceof File) || file.size === 0) {
-    throw new Error("No image selected.");
+    const file = formData.get("file");
+    if (!(file instanceof File) || file.size === 0) {
+      return { error: "No image selected." };
+    }
+
+    const url = await saveSiteImage(slug, kind, file);
+    return { url };
+  } catch (err) {
+    return {
+      error: err instanceof Error ? err.message : "Upload failed.",
+    };
   }
-
-  return saveSiteImage(slug, kind, file);
 }
 
 // --- Site mutations (all verify ownership server-side) ---

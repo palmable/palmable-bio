@@ -34,14 +34,13 @@ export function ImageUploadField({
     formData.set("file", file);
 
     startTransition(async () => {
-      try {
-        const url = await uploadSiteImageAction(slug, kind, formData);
-        onChange(url);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Upload failed.");
-      } finally {
-        if (inputRef.current) inputRef.current.value = "";
+      const result = await uploadSiteImageAction(slug, kind, formData);
+      if ("error" in result) {
+        setError(result.error);
+      } else {
+        onChange(result.url);
       }
+      if (inputRef.current) inputRef.current.value = "";
     });
   }
 
