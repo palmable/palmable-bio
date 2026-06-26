@@ -35,8 +35,8 @@ function formatDriveError(err: unknown): string {
   return `Drive upload failed: ${message}`;
 }
 
-/** Upload an image to a shared Drive folder and return a public view URL. */
-export async function uploadImageToDrive(
+/** Upload via service account to a Shared drive folder (optional fallback). */
+export async function uploadImageToServiceAccountDrive(
   slug: string,
   kind: SiteImageKind,
   file: File,

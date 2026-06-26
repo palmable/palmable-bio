@@ -60,24 +60,22 @@ cp .env.example .env.local
 - `GOOGLE_DRIVE_FOLDER_ID` (optional but recommended) — for image uploads. See
   step 4b below.
 
-## 4b. Image uploads via Google Drive (required on Vercel)
+## 4b. Image uploads (personal Google Drive)
 
-Profile photos, covers, and post images upload to Google Drive when
-`GOOGLE_DRIVE_FOLDER_ID` is set. **Vercel cannot save files to disk** — without
-this variable, uploads fail in production.
+When you're signed in, profile photos, covers, and post images upload to a
+**Palmable uploads** folder in **your personal Google Drive** (your quota, no
+Shared drive required).
 
-1. Enable the **Google Drive API** on the same Cloud project.
-2. Create a **Shared drive** (Google Workspace) or a folder inside one — service
-   accounts cannot reliably upload to personal “My Drive” folders (no storage
-   quota). Add your service account email as a **Content manager** or **Contributor**.
-3. Create an `uploads` folder inside the Shared drive (optional).
-4. Copy the folder ID from the URL:
-   `https://drive.google.com/drive/folders/`**`<THIS_PART>`**
-5. Set `GOOGLE_DRIVE_FOLDER_ID` in `.env.local` **and** in Vercel → Settings →
-   Environment Variables, then redeploy.
+1. Enable the **Google Drive API** on the same Cloud project as sign-in.
+2. Deploy with `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET`, and `AUTH_SECRET` set.
+3. **Sign out, then sign in again** once after deploy — Google will ask for
+   Drive access. (Existing sessions from before this change won't have it.)
+4. Upload in the editor — files appear in My Drive → **Palmable uploads**.
 
-Uploaded files are made **publicly readable** (anyone with the link) so they
-render on bio pages.
+Each image is shared as **anyone with the link** so it renders on your bio page.
+
+**Optional:** `GOOGLE_DRIVE_FOLDER_ID` + service account still works as a
+fallback for Shared-drive uploads if OAuth tokens are missing.
 
 ## 5. Seed the demo row (optional) and run
 

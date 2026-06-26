@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { requireUserEmail, signIn, signOut } from "@/lib/auth";
+import { auth, getUserDriveAuth, requireUserEmail, signIn, signOut } from "@/lib/auth";
 import {
   createSite,
   deleteSite,
@@ -31,7 +31,10 @@ export async function uploadSiteImageAction(
   formData: FormData
 ): Promise<UploadImageResult> {
   try {
-    const email = await requireUserEmail();
+    const session = await auth();
+    const email = session?.user?.email;
+    if (!email) return { error: "Sign in required." };
+
     const site = await getOwnedSite(email, slug);
     if (!site) return { error: "Site not found." };
 
@@ -40,7 +43,7 @@ export async function uploadSiteImageAction(
       return { error: "No image selected." };
     }
 
-    const url = await saveSiteImage(slug, kind, file);
+    const url = await saveSiteImage(slug, kind, file, getUserDriveAuth(session));
     return { url };
   } catch (err) {
     return {

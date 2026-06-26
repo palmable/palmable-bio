@@ -1,6 +1,8 @@
 import { mkdir, writeFile } from "fs/promises";
 import path from "path";
-import { isDriveConfigured, uploadImageToDrive } from "./drive";
+import type { UserDriveAuth } from "./auth";
+import { uploadImageToUserDrive } from "./drive-user";
+import { isDriveConfigured, uploadImageToServiceAccountDrive } from "./drive";
 
 const MAX_BYTES = 5 * 1024 * 1024;
 const ALLOWED = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
@@ -48,22 +50,28 @@ async function saveSiteImageLocally(
 
 /**
  * Persist an uploaded image and return its public URL.
- * Production/serverless requires Google Drive (`GOOGLE_DRIVE_FOLDER_ID`).
+ * Prefers the signed-in user's personal Drive; falls back to service-account
+ * Shared drive, then local disk (dev only).
  */
 export async function saveSiteImage(
   slug: string,
   kind: SiteImageKind,
-  file: File
+  file: File,
+  userAuth?: UserDriveAuth | null
 ): Promise<string> {
   const ext = validateImage(slug, file);
 
+  if (userAuth?.accessToken || userAuth?.refreshToken) {
+    return uploadImageToUserDrive(slug, kind, file, ext, userAuth);
+  }
+
   if (isDriveConfigured()) {
-    return uploadImageToDrive(slug, kind, file, ext);
+    return uploadImageToServiceAccountDrive(slug, kind, file, ext);
   }
 
   if (isServerlessHost()) {
     throw new Error(
-      "Image uploads on production require Google Drive. Add GOOGLE_DRIVE_FOLDER_ID to your Vercel env vars (see docs/google-sheets-setup.md §4b)."
+      "Sign out, then sign in again with Google to upload images to your personal Drive."
     );
   }
 
