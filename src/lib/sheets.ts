@@ -13,7 +13,7 @@
 // with the service account email, Editor role).
 
 import { GoogleSpreadsheet, type GoogleSpreadsheetWorksheet } from "google-spreadsheet";
-import { JWT } from "google-auth-library";
+import { createServiceAccountAuth, isGoogleServiceAccountConfigured } from "./google-auth";
 
 export const SITES_SHEET = "Sites";
 
@@ -32,20 +32,12 @@ export const SITES_HEADERS = [
 /** True when all required Google credentials are present in the environment. */
 export function isSheetsConfigured(): boolean {
   return Boolean(
-    process.env.GOOGLE_SHEETS_ID &&
-      process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL &&
-      process.env.GOOGLE_PRIVATE_KEY
+    process.env.GOOGLE_SHEETS_ID && isGoogleServiceAccountConfigured()
   );
 }
 
-function getAuth(): JWT {
-  // Private keys pasted into .env have literal "\n" sequences; restore them.
-  const key = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n");
-  return new JWT({
-    email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-    key,
-    scopes: ["https://www.googleapis.com/auth/spreadsheets"],
-  });
+function getAuth() {
+  return createServiceAccountAuth(["https://www.googleapis.com/auth/spreadsheets"]);
 }
 
 // Memoize the loaded document across calls within a single server runtime.

@@ -57,6 +57,24 @@ cp .env.example .env.local
 - `GOOGLE_PRIVATE_KEY` — `private_key` from the JSON, **in double quotes**, with
   its `\n` escapes left intact, e.g.
   `"-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"`.
+- `GOOGLE_DRIVE_FOLDER_ID` (optional but recommended) — for image uploads. See
+  step 4b below.
+
+## 4b. Image uploads via Google Drive (optional)
+
+Profile photos, covers, and post images upload to Google Drive when
+`GOOGLE_DRIVE_FOLDER_ID` is set. Without it, files save to `public/uploads/`
+(local dev only — they disappear on serverless hosts like Vercel).
+
+1. Enable the **Google Drive API** on the same Cloud project.
+2. In Google Drive, create a folder (e.g. `Palmable uploads`).
+3. **Share** the folder with your service account email → **Editor**.
+4. Copy the folder ID from the URL:
+   `https://drive.google.com/drive/folders/`**`<THIS_PART>`**
+5. Set `GOOGLE_DRIVE_FOLDER_ID` in `.env.local`.
+
+Uploaded files are made **publicly readable** (anyone with the link) so they
+render on bio pages.
 
 ## 5. Seed the demo row (optional) and run
 
