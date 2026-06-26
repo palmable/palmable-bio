@@ -94,10 +94,10 @@ export default async function DashboardPage() {
                   Edit
                 </Link>
                 <Link
-                  href={`/${site.slug}`}
+                  href={site.published ? `/${site.slug}` : `/preview/${site.slug}`}
                   className="rounded-lg border px-3 py-1.5"
                 >
-                  View
+                  {site.published ? "View" : "Preview"}
                 </Link>
                 <DeleteSiteButton slug={site.slug} title={site.title} />
               </div>

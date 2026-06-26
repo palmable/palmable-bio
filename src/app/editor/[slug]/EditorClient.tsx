@@ -189,12 +189,12 @@ export function EditorClient({ site }: { site: Site }) {
               ← Pages
             </Link>
             <Link
-              href={`/${site.slug}`}
+              href={published ? `/${site.slug}` : `/preview/${site.slug}`}
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm underline opacity-60"
             >
-              Open page ↗
+              {published ? "Open page ↗" : "Preview draft ↗"}
             </Link>
           </div>
           <div className="flex items-center gap-3">
