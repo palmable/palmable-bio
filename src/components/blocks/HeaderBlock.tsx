@@ -1,16 +1,15 @@
 import type { HeaderBlock } from "@/lib/types";
+import { SiteImage } from "@/components/SiteImage";
 
 // Used when header is rendered outside BioPageView (e.g. block preview).
 export function HeaderBlockView({ block }: { block: HeaderBlock }) {
   return (
     <header className="flex flex-col items-center text-center">
       {block.coverUrl ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={block.coverUrl} alt="" className="h-36 w-full object-cover" />
+        <SiteImage src={block.coverUrl} alt="" className="h-36 w-full object-cover" />
       ) : null}
       {block.avatarUrl ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
+        <SiteImage
           src={block.avatarUrl}
           alt={block.name}
           className={`h-24 w-24 rounded-full object-cover ${

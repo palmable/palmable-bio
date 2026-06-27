@@ -3,6 +3,7 @@ import { BlockRenderer } from "@/components/blocks/BlockRenderer";
 import { GalleryBlockView } from "@/components/blocks/GalleryBlock";
 import { SocialsBlockView } from "@/components/blocks/SocialsBlock";
 import { VerifiedBadge } from "@/components/bio/VerifiedBadge";
+import { SiteImage } from "@/components/SiteImage";
 
 function findBlock<T extends Block["type"]>(
   blocks: Block[],
@@ -15,8 +16,7 @@ function ProfileSection({ header }: { header: HeaderBlock }) {
   return (
     <div className="flex flex-col items-center px-5 pt-5 text-center">
       {header.avatarUrl ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
+        <SiteImage
           src={header.avatarUrl}
           alt={header.name}
           className="h-24 w-24 rounded-full object-cover"
@@ -57,8 +57,7 @@ export function BioPageView({ site }: { site: Site }) {
       style={themeVars}
     >
       {header?.coverUrl ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={header.coverUrl} alt="" className="h-48 w-full object-cover" />
+        <SiteImage src={header.coverUrl} alt="" className="h-48 w-full object-cover" />
       ) : null}
 
       {header ? <ProfileSection header={header} /> : null}

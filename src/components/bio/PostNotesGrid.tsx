@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import type { GalleryImage } from "@/lib/types";
 import { postBody, postTitle } from "@/lib/post-utils";
+import { SiteImage } from "@/components/SiteImage";
 
 type PostNotesGridProps = {
   title?: string;
@@ -46,8 +47,7 @@ export function PostNotesGrid({ title, images }: PostNotesGridProps) {
                 onClick={() => setActiveIndex(i)}
                 className="overflow-hidden rounded-2xl border border-black/5 bg-white text-left shadow-sm transition-transform active:scale-[0.98]"
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <SiteImage
                   src={img.url}
                   alt={img.alt ?? (label || "Post")}
                   className="aspect-[3/4] w-full object-cover"
@@ -78,8 +78,7 @@ export function PostNotesGrid({ title, images }: PostNotesGridProps) {
             aria-modal="true"
             aria-label={activeTitle || "Post"}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <SiteImage
               src={active.url}
               alt={active.alt ?? (activeTitle || "Post cover")}
               className="max-h-[50vh] w-full object-cover"

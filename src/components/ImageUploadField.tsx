@@ -2,6 +2,7 @@
 
 import { useRef, useState, useTransition } from "react";
 import { uploadSiteImageAction } from "@/app/actions";
+import { SiteImage } from "@/components/SiteImage";
 import type { SiteImageKind } from "@/lib/uploads";
 
 type ImageUploadFieldProps = {
@@ -49,8 +50,7 @@ export function ImageUploadField({
       <span>{label}</span>
       {value ? (
         <div className="relative overflow-hidden rounded-lg border">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={value} alt="" className={previewClassName} />
+          <SiteImage src={value} alt="" className={previewClassName} />
           <button
             type="button"
             onClick={() => onChange("")}

@@ -1,5 +1,6 @@
 import type { GalleryBlock } from "@/lib/types";
 import { PostNotesGrid } from "@/components/bio/PostNotesGrid";
+import { SiteImage } from "@/components/SiteImage";
 import { SectionTitle } from "./SectionTitle";
 
 type GalleryBlockViewProps = {
@@ -18,8 +19,7 @@ export function GalleryBlockView({ block, variant = "grid" }: GalleryBlockViewPr
       {block.title ? <SectionTitle>{block.title}</SectionTitle> : null}
       <div className="grid grid-cols-3 gap-2">
         {block.images.map((img, i) => (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <SiteImage
             key={i}
             src={img.url}
             alt={img.alt ?? ""}

@@ -2,6 +2,7 @@ import { Readable } from "stream";
 import { google } from "googleapis";
 import { isGoogleServiceAccountConfigured } from "./google-auth";
 import type { SiteImageKind } from "./uploads";
+import { driveFileUrl } from "./drive-url";
 
 const DRIVE_SCOPE = "https://www.googleapis.com/auth/drive";
 
@@ -76,7 +77,7 @@ export async function uploadImageToServiceAccountDrive(
       supportsAllDrives: true,
     });
 
-    return `https://drive.google.com/uc?export=view&id=${fileId}`;
+    return driveFileUrl(fileId);
   } catch (err) {
     throw new Error(formatDriveError(err));
   }

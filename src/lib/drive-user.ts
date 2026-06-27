@@ -2,6 +2,7 @@ import { Readable } from "stream";
 import { google } from "googleapis";
 import type { UserDriveAuth } from "./auth";
 import type { SiteImageKind } from "./uploads";
+import { driveFileUrl } from "./drive-url";
 
 const UPLOAD_FOLDER = "Palmable uploads";
 
@@ -114,7 +115,7 @@ export async function uploadImageToUserDrive(
       requestBody: { role: "reader", type: "anyone" },
     });
 
-    return `https://drive.google.com/uc?export=view&id=${fileId}`;
+    return driveFileUrl(fileId);
   } catch (err) {
     throw new Error(formatUserDriveError(err));
   }
